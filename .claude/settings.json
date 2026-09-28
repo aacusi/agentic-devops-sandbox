@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(make help:*)",
+      "Bash(make preflight:*)",
+      "Bash(make version:*)",
+      "Bash(make test:*)",
+      "Bash(make lint:*)",
+      "Bash(make fmt:*)",
+      "Bash(make k8s-build:*)",
+      "Bash(make tf-fmt:*)",
+      "Bash(make tf-validate:*)",
+      "Bash(make tf-plan:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git ls-files:*)",
+      "Bash(terraform fmt:*)",
+      "Bash(terraform validate:*)",
+      "Bash(terraform plan:*)",
+      "Bash(terraform version:*)",
+      "Bash(kubectl config current-context:*)",
+      "Bash(kubectl config get-contexts:*)",
+      "Bash(kubectl get:*)",
+      "Bash(kubectl describe:*)",
+      "Bash(kubectl logs:*)",
+      "Bash(kubectl kustomize:*)",
+      "Bash(kubectl explain:*)",
+      "Bash(kubectl api-resources:*)",
+      "Bash(kubectl version:*)",
+      "Bash(kustomize build:*)",
+      "Bash(docker ps:*)",
+      "Bash(docker images:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker inspect:*)",
+      "Bash(docker version:*)",
+      "Bash(docker info:*)",
+      "Bash(kind get:*)",
+      "Bash(kind version:*)",
+      "Bash(argocd app get:*)",
+      "Bash(argocd app diff:*)",
+      "Bash(argocd app list:*)"
+    ],
+    "deny": [
+      "Bash(aws:*)",
+      "Bash(aws2:*)",
+      "Bash(eksctl:*)",
+      "Bash(sam:*)",
+      "Bash(cdk:*)",
+      "Bash(terraform apply:*)",
+      "Bash(terraform destroy:*)",
+      "Bash(terraform import:*)",
+      "Bash(terraform state rm:*)",
+      "Bash(terraform state push:*)",
+      "Bash(terraform force-unlock:*)",
+      "Bash(kubectl delete:*)",
+      "Bash(kubectl drain:*)",
+      "Bash(kubectl cordon:*)",
+      "Bash(kubectl edit:*)",
+      "Bash(kubectl replace:*)",
+      "Bash(kubectl patch:*)",
+      "Bash(kubectl scale:*)",
+      "Bash(kubectl exec:*)",
+      "Bash(kind delete:*)",
+      "Bash(docker system prune:*)",
+      "Bash(docker volume prune:*)",
+      "Bash(docker rm:*)",
+      "Bash(docker rmi:*)",
+      "Bash(git push:*)",
+      "Bash(gh repo create:*)",
+      "Bash(gh secret:*)",
+      "Read(~/.aws/**)",
+      "Read(~/.kube/config)",
+      "Read(~/.config/gcloud/**)",
+      "Read(~/.azure/**)",
+      "Read(~/.ssh/**)",
+      "Read(**/.env)",
+      "Read(**/*.tfstate)",
+      "Read(**/*.tfstate.*)",
+      "Read(**/credentials)",
+      "Read(**/*.pem)",
+      "Read(**/id_rsa*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/deny-dangerous-commands.py\""
+          }
+        ]
+      }
+    ]
+  }
+}
