@@ -1,0 +1,16 @@
+# Environment-agnostic base. Contains nothing environment-specific: no namespace,
+# no replica count you would want to vary, no image tag you would want to pin.
+# Everything variable is set by an overlay.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - service.yaml
+
+# Common labels applied to every resource. app.kubernetes.io/* is the standard set
+# recognised by tooling (including the Argo CD UI).
+labels:
+  - includeSelectors: false
+    pairs:
+      app.kubernetes.io/part-of: agentic-devops-sandbox

@@ -1,0 +1,25 @@
+# Stable in-cluster address for the Deployment's pods.
+#
+# ClusterIP, not NodePort or LoadBalancer: reaching the app from the laptop is the
+# job of `kubectl port-forward` (phase 4) and then an Ingress (phase 4/5). Keeping
+# the Service internal means the base manifest is valid on any cluster.
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-devops
+  labels:
+    app.kubernetes.io/name: hello-devops
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: agentic-devops-sandbox
+spec:
+  type: ClusterIP
+  selector:
+    # Matches the pod template labels, NOT the Deployment's own labels.
+    app.kubernetes.io/name: hello-devops
+  ports:
+    - name: http
+      port: 80
+      # Named target port: the container can move to a different port without
+      # touching this file.
+      targetPort: http
+      protocol: TCP
