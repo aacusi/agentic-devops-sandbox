@@ -1,0 +1,27 @@
+# Keep the build context tiny: everything sent to the daemon costs time, and
+# anything sent by accident can end up in a layer. Deny by default is safer, but
+# an explicit list is easier to read while learning.
+
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+tests/
+.git/
+.gitignore
+.DS_Store
+
+# Never ship credentials or environment files, even by accident.
+.env
+.env.*
+*.pem
+*.key
