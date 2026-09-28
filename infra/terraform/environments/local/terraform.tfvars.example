@@ -1,0 +1,13 @@
+# Copy to terraform.tfvars to override defaults. NEVER commit terraform.tfvars —
+# it is gitignored because tfvars files are where credentials historically leak.
+#
+#   cp terraform.tfvars.example terraform.tfvars
+#
+# All defaults are already sensible for a laptop; you usually need none of this.
+
+# environment = "local"          # only "local" is accepted by this module
+# cluster_name = "agentic-sandbox"
+# kind_node_image = "kindest/node:v1.31.0"
+# worker_count = 2               # 1-3
+# app_namespace = "hello-devops"
+# argocd_namespace = "argocd"

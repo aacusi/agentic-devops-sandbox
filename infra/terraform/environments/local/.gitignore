@@ -1,0 +1,23 @@
+# Redundant with the root .gitignore on purpose. State and tfvars leaking into a
+# commit is the single most common Terraform incident; two independent guards is
+# cheap insurance.
+
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
+!terraform.tfvars.example
+*.tfplan
+tfplan
+crash.log
+crash.*.log
+
+# The provider lock file SHOULD be committed once phase 3 adds providers.
+!.terraform.lock.hcl
+
+# Kubeconfig written by the tehcyx/kind provider: kubeconfig_path defaults to
+# <cluster_name>-config. Embeds a client certificate and key, so it is a
+# credential file, not config. Redundant with the root .gitignore on purpose.
+*-config

@@ -1,0 +1,48 @@
+# kind cluster topology for the sandbox.
+#
+# NO CLUSTER HAS BEEN CREATED. This file is data, not an action. Phase 3 feeds it
+# to Terraform (tehcyx/kind provider), which is the only thing that should create
+# the cluster.
+#
+# Resulting kubectl context: kind-agentic-sandbox
+#
+# Keep `image:` in sync with var.kind_node_image in
+# infra/terraform/environments/local/variables.tf — Terraform is the source of
+# truth once phase 3 lands.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: agentic-sandbox
+
+nodes:
+  # ------------------------------------------------------------------
+  # Control plane. Also carries the ingress controller, which is why it
+  # publishes ports 80/443 to the host.
+  # ------------------------------------------------------------------
+  - role: control-plane
+    image: kindest/node:v1.31.0
+    # This label is what the ingress-nginx kind manifest's nodeSelector looks for.
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+    # Host port -> node port mapping. This is what makes the app reachable at
+    # http://localhost instead of requiring `kubectl port-forward`.
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 80
+        protocol: TCP
+      - containerPort: 443
+        hostPort: 443
+        protocol: TCP
+
+  # ------------------------------------------------------------------
+  # Two workers: enough for the scheduler to make real placement decisions and
+  # for pod anti-affinity / rolling updates to be meaningful. Three or more will
+  # start to hurt on a laptop.
+  # ------------------------------------------------------------------
+  - role: worker
+    image: kindest/node:v1.31.0
+  - role: worker
+    image: kindest/node:v1.31.0
