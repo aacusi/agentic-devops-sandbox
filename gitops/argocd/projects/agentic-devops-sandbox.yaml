@@ -1,0 +1,35 @@
+# The blast-radius fence. An Application in this project may only read from the
+# one repository below, deploy to the local cluster, and write into one namespace.
+# Anything outside those bounds is refused by the Argo CD API, not by convention.
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: agentic-devops-sandbox
+  namespace: argocd
+spec:
+  description: Local learning sandbox. One repo, one cluster, one namespace.
+
+  # Exactly one permitted source. A new repo means editing this file.
+  sourceRepos:
+    - https://github.com/aacusi/agentic-devops-sandbox.git
+
+  # The in-cluster API server only, and only the hello-devops namespace.
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: hello-devops
+
+  # Empty means "no cluster-scoped resources at all". This is ADR-0004 expressed
+  # as policy: Terraform owns namespaces and anything else cluster-wide, so Argo
+  # CD is structurally unable to create or modify them even if a manifest asks.
+  clusterResourceWhitelist: []
+
+  # Only the three kinds the overlay actually renders. Adding an Ingress or an
+  # HPA later means adding it here first — deliberate friction, so the fence is
+  # widened as a decision rather than by accident.
+  namespaceResourceWhitelist:
+    - group: ""
+      kind: ConfigMap
+    - group: ""
+      kind: Service
+    - group: apps
+      kind: Deployment

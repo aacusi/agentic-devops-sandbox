@@ -1,0 +1,32 @@
+# Points Argo CD at the local overlay. These resources already exist in the
+# cluster from a manual `kubectl apply -k`, so the first reconciliation is an
+# adoption, not a creation: Argo CD takes ownership of live objects it did not
+# make. A no-op first sync is the expected and desired outcome.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-devops
+  namespace: argocd
+
+  # NO resources-finalizer.argocd.argoproj.io, on purpose. With that finalizer,
+  # deleting this Application cascades into deleting the Deployment, Service and
+  # ConfigMap it manages. Without it, deleting the Application only stops Argo CD
+  # from watching them and leaves the running app untouched.
+spec:
+  project: agentic-devops-sandbox
+
+  source:
+    repoURL: https://github.com/aacusi/agentic-devops-sandbox.git
+    targetRevision: main
+    path: k8s/hello-devops/overlays/local
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: hello-devops
+
+  # Manual sync. Empty is not a placeholder — it is the first rung of the ladder
+  # in gitops/README.md. automated, then prune, then selfHeal, each added as its
+  # own reviewed change so the effect of each one is observed in isolation.
+  #
+  # Notably absent: syncOptions CreateNamespace=true. The namespace is Terraform's.
+  syncPolicy: {}
