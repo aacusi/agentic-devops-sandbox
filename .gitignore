@@ -1,0 +1,96 @@
+# ---------------------------------------------------------------------------
+# Secrets and credentials — highest priority, never commit anything here
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+credentials
+.aws/
+.kube/
+kubeconfig
+kubeconfig-*
+*.kubeconfig
+
+# kind writes a kubeconfig named <cluster_name>-config beside the Terraform root
+# module (the tehcyx/kind provider's kubeconfig_path default). It embeds the
+# cluster CA, a client certificate and a client key — admin credentials for the
+# local cluster.
+infra/terraform/environments/*/*-config
+secrets.yaml
+secret-*.yaml
+*.secret.yaml
+
+# ---------------------------------------------------------------------------
+# Terraform — state can contain plaintext secrets
+# ---------------------------------------------------------------------------
+**/.terraform/
+**/.terraform.lock.hcl.bak
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+*.tfplan
+tfplan
+plan.out
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# ---------------------------------------------------------------------------
+# Editors / OS
+# ---------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+.idea/
+*.swp
+*.swo
+*~
+.vscode/*
+!.vscode/extensions.json
+
+# ---------------------------------------------------------------------------
+# Claude Code — personal settings stay local, project settings are committed
+# ---------------------------------------------------------------------------
+.claude/settings.local.json
+
+# ---------------------------------------------------------------------------
+# Local scratch
+# ---------------------------------------------------------------------------
+tmp/
+scratch/
+*.log
